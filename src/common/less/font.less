@@ -1,18 +1,18 @@
 @import "variables";
 
 @font-face {
-  font-family: 'myfont';
+  font-family: 'icomoon';
   src:
-    url('@{icomoon-font-path}/myfont.ttf?hlhqwg') format('truetype'),
-    url('@{icomoon-font-path}/myfont.woff?hlhqwg') format('woff'),
-    url('@{icomoon-font-path}/myfont.svg?hlhqwg#myfont') format('svg');
+    url('../fonts/icomoon.ttf?pzfno9') format('truetype'),
+    url('../fonts/icomoon.woff?pzfno9') format('woff'),
+    url('../fonts/icomoon.svg?pzfno9#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'myfont' !important;
+  font-family: 'icomoon' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -25,9 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-send {
+.icon-category {
   &:before {
-    content: @icon-send;
+    content: @icon-category;
   }
 }
 .icon-found {
@@ -35,9 +35,14 @@
     content: @icon-found;
   }
 }
-.icon-category {
+.icon-index {
   &:before {
-    content: @icon-category;
+    content: @icon-index;
+  }
+}
+.icon-love {
+  &:before {
+    content: @icon-love;
   }
 }
 .icon-me {
@@ -45,9 +50,9 @@
     content: @icon-me;
   }
 }
-.icon-index {
+.icon-send {
   &:before {
-    content: @icon-index;
+    content: @icon-send;
   }
 }
 

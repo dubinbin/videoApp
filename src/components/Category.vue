@@ -1,29 +1,54 @@
 <template>
   <div class="category">
+
+    <div class="loading" v-if="loadShow">
+      <load-more :tip="('正在加载')"></load-more>
+    </div>
+
    <ul class="categoryList">
-     <li>
-       <span><router-link to="/categorylist">新番</router-link></span>
-      </li>
-     <li>
-       <span><router-link to="/categorylist">新番</router-link></span>
+     <li v-for="item of categorylist">
+       <span><router-link :to="{path:'categorylist',query:{id:item.fid}}">{{item.name}}</router-link></span>
     </li>
-     <li>
-       <span><router-link to="/categorylist">新番</router-link></span>
-    </li>
-     <li>
-       <span><router-link to="/categorylist">新番</router-link></span>
-   </li>
    </ul>
   </div>
 </template>
 
 <script>
-export default {
+import { LoadMore } from 'vux'
+import { LOCALHOST_URL } from '../common/js/localhost.js'
 
+export default {
+  created() {
+    this.loadShow = true
+    this.$http.get(''+LOCALHOST_URL+'/api/movieCategoryList').then((response)=>{
+      this.categorylist = response.body;
+      this.loadShow = false
+    })
+  },
+  data() {
+    return {
+      categorylist:'',
+      loadShow:''
+    }
+  },
+  components: {
+     LoadMore
+  }
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
+.loading{
+    position: absolute;
+    top: 43%;
+    left: 35%;
+    right: 35%;
+    color: #fff;
+    width: 30%;
+    background: rgba(36, 36, 36, 0.75);
+    height: 90px;
+    border-radius: 9px;
+}
 .categoryList{
   padding: 10px 10px 10px 10px;
   li{

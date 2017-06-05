@@ -1,6 +1,6 @@
 <template>
   <div>
-    <x-header :left-options="{showBack: false}">DiliDili</x-header>
+    <x-header :left-options="{showBack: true}">DiliDili</x-header>
   </div>
 </template>
 

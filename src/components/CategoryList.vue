@@ -1,85 +1,25 @@
 <template>
-  <div style="margin-bottom: 50px;">
+<transition name="move">
+  <div class="categorylist" style="margin-bottom: 50px;">
     <ul class="hot_Recommend">
       <div class="title">
-         <p>新番区</p>
+         <p>{{title}}</p>
      </div>
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
+      <li class="videoArea" v-for="item of movielist">
+         <router-link :to="{path:'video',query:{id:item.id}}" tag="a"><img :src="item.PicUrl" width="100%">
+         <span>{{item.Mname}}</span>
+        </router-link>
       </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>
-       <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg" width="100%">
-        <span>我与66的视听柜</span>
-        </a>
-      </li>
-
-      <li class="videoArea">
-         <a href="#"><img src="../assets/img/example.jpg"  width="100%">
-        <span>我与66的视听柜</span>
-         </a>
-      </li>     
     </ul>
-
+    <span  v-if="!datano" class="clickMore" @click="clickMore">更多</span>
+    <div v-if="datano"><divider>{{ ('没有啦～～～') }}</divider></div>
   </div>
+</transition>
 </template>
 
 <script>
-import {GroupTitle, XButton, Divider } from 'vux'
+import { GroupTitle, XButton, Divider } from 'vux'
+import { LOCALHOST_URL } from '../common/js/localhost.js'
 
 export default {
   components: {
@@ -87,12 +27,82 @@ export default {
     XButton,
     Divider
   },
-  created () {
+  data() {
+    return  {
+      movielist:'',
+      title:'',
+      datano:false,
+      currentPage:1
+    }
   },
+  created () {
+    const id = this.$route.query.id
+    this.$http.get(''+LOCALHOST_URL+'/api/getCategorymovie',{
+      params:{id : id}
+    }).then((response)=>{
+      let body = response.body.data;
+      this.movielist = body;
+      this.title = response.body.name;
+      for(let i=0;i<body.length;i++){
+        body[i].PicUrl = LOCALHOST_URL + body[i].PicUrl.substring(1);
+      }
+    }) 
+  },
+  methods: {
+    clickMore(){
+      const id = this.$route.query.id;
+      this.$http.post(''+LOCALHOST_URL+'/api/getCategorymoviePage',{
+        pageNum : this.currentPage,
+        id: id
+       }).then((response) => {
+         if(response.body!=''){
+          this.currentPage++;
+          let body = response.body;
+          let data = [];
+          let _this = this;
+          for(let i=0;i<body.length;i++){
+            var obj = {};
+            obj.Mname = body[i].Mname;
+            obj.id = body[i].id;
+            obj.PicUrl = LOCALHOST_URL + body[i].PicUrl.substring(1);
+            data[i] = obj;
+            this.movielist.push(obj)
+          }
+         }else{
+            this.datano = true;
+         }     
+      },(response)=>{
+        console.log(response)
+        }
+      )   
+    }
+  }
 }
 </script>
 
 <style scoped lang="less">
+.categorylist{
+    transform: translate3d(0, 0, 0);
+    &.move-enter-active{
+      transition: all 0.2s linear
+    }
+    &.move-enter{
+      transform: translate3d(100%, 0, 0)
+    }
+    .clickMore{
+      display: block;
+      text-align: center;
+      width: 90%;
+      position: relative;
+      margin: 0 auto;
+      border: 1px solid #e9e9e9;
+      border-radius: 3px;
+      margin-bottom: 66px;
+      background: #fff;
+      font-size: 12px;
+      padding:5px;
+    }
+}
 .videoArea{
   float: left;
   width:47%;

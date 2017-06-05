@@ -7,7 +7,6 @@
  * 版本2.0 2015/08/12
  */
 
-
 ;(function ($) {
     var DanmuPlayer = function (element, options) {
         this.$element = $(element);
@@ -48,7 +47,7 @@
 
 
         //控件添加
-        this.$element.css("height",'auto');// this.$element.height() + 40
+        this.$element.css("height",'auto');
         this.$element.append('<video class="danmu-video" src="' + options.src + '" width="' + options.width + '" height="' + options.height + '"></video>');
         this.$element.append('<div class="danmu-player-load" ></div>');
         this.$element.append('<div class="danmu-player-ctrl" ></div>');
@@ -71,9 +70,7 @@
 
         this.$ctrlMain.append('<div class=" send-btn ctrl-btn"  >发送</div>');
 
-        //this.$ctrlMain.append('<div class="opt-btn ctrl-btn " ><span class="glyphicon glyphicon-text-color" aria-hidden="true"></div>');
-        //this.$ctrlMain.append('<input class="danmu-input ctrl-btn" type="textarea" id="danmu_text" max=300 />'); // -> button あ
-       // this.$ctrlMain.append('<div class=" send-btn ctrl-btn"  >发送</div>');
+
         this.$ctrlMain.append('<div class="full-screen  ctrl-btn-right"><span class=" glyphicon glyphicon-resize-full" aria-hidden="true"></span></div>');
         this.$ctrlMain.append('<div class="show-danmu  ctrl-btn-right ctrl-btn-right-active"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>');
 
@@ -136,7 +133,7 @@
         //从后端获取弹幕
         this.getDanmu = function () {
             $.get(that.options.urlToGetDanmu, function (data, status) {
-                danmuFromSql = eval(data);
+                var danmuFromSql = eval(data);
                 for (var i = 0; i < danmuFromSql.length; i++) {
                     var danmuLs = danmuFromSql[i];
                     $(that.id + ' .danmu-div').danmu("addDanmu", danmuLs);
@@ -174,41 +171,57 @@
             $(e.data.that).trigger("senddanmu");
         };
 
-        //播放暂停
-        this.playPause = function (e) {
-            if (e.data.video.paused) {
-                e.data.video.play();
-                $(e.data.that.id + " .danmu-div").danmu('danmuResume');
-                $(e.data.that.id + " .play-btn span").removeClass("glyphicon-play").addClass("glyphicon-pause");
+        //屏幕播放暂停事件
+        this.playPauseScreen = function (e) {
+            // if (e.data.video.paused) {
+            //     $(e.data.that.id + " .danmu-div").danmu('danmuResume');
+            //     $(e.data.that.id + " .play-btn span").removeClass("glyphicon-play").addClass("glyphicon-pause");
+            if($('.play-btn span').hasClass('glyphicon-play')){
+                $('.danmu-player-ctrl').hide(0);
+                //}
             }
             else {
-                e.data.video.pause();
-                $(e.data.that.id + " .danmu-div").danmu('danmuPause');
-                $(e.data.that.id + " .play-btn span").removeClass("glyphicon-pause").addClass("glyphicon-play");
+                // e.data.video.pause();
+                // $(e.data.that.id + " .danmu-div").danmu('danmuPause');
+                // $(e.data.that.id + " .play-btn span").removeClass("glyphicon-pause").addClass("glyphicon-play");
+                if($('.play-btn span').hasClass('glyphicon-pause')){
+                    $('.danmu-player-ctrl').show(0);
+                 }
             }
         };
-
+        //播放按钮暂停事件
+        this.playPauseBtn = function (e) {
+            if (e.data.video.paused) {
+                e.data.video.play();//播放
+                $(e.data.that.id + " .danmu-div").danmu('danmuResume');
+                $(e.data.that.id + " .play-btn span").removeClass("glyphicon-play").addClass("glyphicon-pause");
+                if($('.play-btn span').hasClass('glyphicon-pause')){
+                    $('.danmu-player-ctrl').hide(0);
+                }
+            }
+            else {
+                e.data.video.pause();//暂停
+                $(e.data.that.id + " .danmu-div").danmu('danmuPause');
+                $(e.data.that.id + " .play-btn span").removeClass("glyphicon-pause").addClass("glyphicon-play");
+                if($('.play-btn span').hasClass('glyphicon-play')){
+                    $('.danmu-player-ctrl').show(0);
+                }
+            }
+        };
         //主计时器
-        var mainTimer = setInterval(function () {
+        var mainTimer = setTimeout(function () {
             //缓冲条
-            var bufTime=$(that.id + " .danmu-video").get(0).buffered.end($(that.id + " .danmu-video").get(0).buffered.length-1);
+            // var bufTime= $(that.id + " .danmu-video").get(0).buffered.end($(that.id + " .danmu-video").get(0).buffered.length-1);
+            // var bufTime = $(that.id + " .danmu-video").get(0).buffered.end(0)
+            // var buffPrecent = (bufTime/that.duration) * 100;
+            // $(that.id + ".danmu-player .ctrl-progress .aimTime ").css("width", 30 + "%");
 
-            var buffPrecent = (bufTime/that.duration) * 100;
-            $(that.id + ".danmu-player .ctrl-progress .buffered ").css("width", buffPrecent + "%");
-           // 时间轴修正
-           // if (Math.abs($(that.id + " .danmu-div").data("nowTime") - parseInt(that.video.currentTime)*10) > 1) {
-           //     $(that.id + " .danmu-div").data("nowTime", parseInt(that.video.currentTime)*10);
-           //     console.log("revise time：")
-           // }
         }, 1000);
 
 
         var secTimer = setInterval(function () {
-           // if (Math.abs($(that.id + " .danmu-div").data("nowTime") - parseInt(that.video.currentTime*10)) > 1) {
-              //  console.log("revise time"+$(that.id + " .danmu-div").data("nowTime")+ ","+that.video.currentTime*10);
-                $(that.id + " .danmu-div").data("nowTime", parseInt(that.video.currentTime*10));
+             $(that.id + " .danmu-div").data("nowTime", parseInt(that.video.currentTime*10));
 
-          //  }
         }, 50);
         //按键事件
         $(document).ready(function () {
@@ -224,12 +237,10 @@
 
         //播放事件
         $(this.id + " .play-btn").on("click", {video: this.video, that: that}, function (e) {
-            that.playPause(e);
-           //$('.danmu-player-ctrl').animate({marginBottom:"-50px"},1000).hide(1000);
+            that.playPauseBtn(e);
         });
         $(this.id + " .danmu-div").on("click", {video: this.video, that: that}, function (e) {
-            that.playPause(e);
-          // $('.danmu-player-ctrl').css('marginBottom','0').show();
+            that.playPauseScreen(e);
         });
 
         //waiting事件
@@ -335,7 +346,7 @@
             var pos = e.pageX - $(e.data.that.id + " .ctrl-progress").offset().left;
             var percentage = pos / sumLen;
             $(e.data.that.id + '.danmu-player .ctrl-progress .current ').css('width', percentage * 100 + '%');
-            aimTime = parseFloat(percentage * e.data.that.duration);
+            var aimTime = parseFloat(percentage * e.data.that.duration);
             e.data.video.currentTime = aimTime;
         });
         var timeDrag = false;
@@ -345,16 +356,19 @@
         $(document).on('mouseup', function (e) {
             if (timeDrag) timeDrag = false;
         });
+        //拉动进度条
         $(this.id + " .ctrl-progress").on('mousemove touchmove', {video: this.video, that: that}, function (e) {
+                var touchPoint = e.originalEvent.changedTouches[0].pageX;
             if (timeDrag) {
                 var sumLen = $(e.data.that.id + " .ctrl-progress").width();
-                var pos = e.pageX - $(e.data.that.id + " .ctrl-progress").offset().left;
+                var pos = touchPoint - $(e.data.that.id + " .ctrl-progress").offset().left;
                 var percentage = pos / sumLen;
-                if (percentage > 1)
-                    percentage = 1;
-                if (percentage < 0)
-                    percentage = 0;
-                aimTime = parseFloat(percentage * e.data.that.duration);
+                if (percentage > 1){
+                     percentage = 1;
+                }else if(percentage < 0){
+                     percentage = 0;
+                }
+                var aimTime = parseFloat(percentage * e.data.that.duration);
                 e.data.video.currentTime = aimTime;
                 $(e.data.that.id + '.danmu-player .ctrl-progress .current ').css('width', percentage * 100 + '%');
             }

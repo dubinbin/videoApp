@@ -11,6 +11,15 @@ import home     from '../components/Index.vue';
 import login    from '../components/Login.vue'
 import categorylist    from '../components/CategoryList.vue'
 import videoPlay   from  '../components/VideoPlay.vue'
+import video   from  '../components/Video.vue'
+import resign  from  '../components/Resign.vue'
+import topic   from  '../components/Topic.vue'
+import collect from  '../components/Collect.vue'
+import article from  '../components/Article.vue'
+import feedback from '../components/Feedback.vue'
+import uploadAvatar from '../components/UploadAvatar.vue'
+import setting  from  '../components/Setting.vue'
+import historyList from '../components/HistoryList.vue'
 
 export default new Router({
   'linkActiveClass': 'active',
@@ -49,6 +58,42 @@ export default new Router({
       path:'/videoPlay',
       name: 'videoPlay',
       component:videoPlay
+    },{
+      path:'/video',
+      name: 'video',
+      component:video  
+    },{
+      path:'/resign',
+      name: 'resign',
+      component:resign
+    },{
+      path:'/topic',
+      name: 'topic',
+      component:topic
+    },{
+      path:'/collect',
+      name:'collect',
+      component:collect
+    },{
+      path:'/article',
+      name:'article',
+      component:article
+    },{
+      path: '/feedback',
+      name: 'feedback',
+      component:feedback
+    },{
+      path: '/uploadAvatar',
+      name: 'uploadAvatar',
+      component:uploadAvatar
+    },{
+      path: '/setting',
+      name: 'setting',
+      component:setting
+    },{
+      path: '/historyList',
+      name: 'historyList',
+      component:historyList
     }
   ]
 })

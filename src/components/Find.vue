@@ -1,8 +1,8 @@
 <template>
   <div>
     <group>
-      <cell title="兴趣圈" is-link link="/find"></cell>
-      <cell title="话题排行" is-link></cell>
+      <cell title="兴趣圈" is-link link="/topic"></cell>
+      <cell title="话题排行" is-link link="/topic"></cell>
       <cell title="活动中心" is-link></cell>
     </group>
 
