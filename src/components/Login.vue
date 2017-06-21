@@ -26,7 +26,7 @@ export default {
   methods: {
       login() {
         this.userName = this.userName.trim()
-        this.$http.post(''+LOCALHOST_URL+'/api/login',{
+        this.$http.post(''+LOCALHOST_URL+'/api/loginInFe',{
           userName: this.userName,
           password: this.password
         }).then((response) => {
@@ -42,7 +42,7 @@ export default {
           if(body.state === '密码错误'){
             console.log('密码错误')
           }else if(body.state==='账号不存在'){
-            console.log('密码错误')
+            alert('账号不存在或者已被管理员封禁')
           }else{
            let userid = body[0].id;
            let avatar = body[0].thumb;

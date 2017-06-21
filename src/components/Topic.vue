@@ -29,7 +29,6 @@ export default {
     },
     data() {
       return {
-        title: '拜年祭民族乐器演奏',
         topicList:''
       }
     },

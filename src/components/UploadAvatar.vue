@@ -14,7 +14,7 @@
 
     <div class="btnGroup">
         <span class="sureChange" v-if="src!=''" @click="cofirmChange">确定更换</span>
-        <span class="cancelChange" @click="cancelUpload">取消更换</span>
+        <span class="cancelChange"   @click="cancelUpload">取消更换</span>
     </div>
 </div>
 </template>

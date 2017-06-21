@@ -18,7 +18,7 @@
       <span>发布于 {{publishTime}}</span>
    </div>
 
-   <div class="favorite_btn" v-if="this.$store.state.user.id!=''">
+   <div class="favorite_btn" v-if="this.$store.state.user.name!=''">
       <span class="icon-love favorite" @click="toggleFavorite" :class="{'active':favorite}"></span>
       <p class="favorite_text">{{favoriteText}}</p>
    </div>
@@ -42,7 +42,7 @@
    <p>暂无评论</p>
  </div>
  <!--后期考虑把这个评论功能拆分一个组件-->
-  <div class="sendComment" v-if="this.$store.state.user.id!=''">
+  <div class="sendComment" v-if="this.$store.state.user.name!=''">
     <input type="text" class="CommentWrite" v-model="commentinfo">
     <span class="icon-send" @click="sendComment"></span>
    </div>
